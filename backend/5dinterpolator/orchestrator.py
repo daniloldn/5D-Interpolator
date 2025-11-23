@@ -1,18 +1,25 @@
-from data_handling import load_data, validate_data
+from data_handling import load_data, preprocessing_x, preprocessing_y
+from sklearn.model_selection import train_test_split
 
 
 def process_data(file_path: str):
 
-    df = load_data(file_path)
+    X, y, dim = load_data(file_path)
 
     issues = []
-    if df.empty:
-        issues.append("data set is empty")
-    if not validate_data(df):
-        issues.append("data does not have the right dimension")
-    if df.isna().sum().sum() > 0:
-        issues.append("data has missing values")
+    if not dim:
+        issues.append("The data has wrong dimensions")
+    if X.shape[0] != y.shape[0]:
+        issues.append("Features and target don't match dimensions")
+    if X.shape[0] == 0:
+        issues.append("Data set is empyt")
+    
+    #standardize and impute if needed (X only)
+    y_transform = preprocessing_y.transfrom(y)
+    X_transform = preprocessing_x.transform(X)
 
-    #add other processing steps
+    #train test split
 
-    return df
+    X_train, X_test, y_train, y_test = train_test_split(X_transform, y_transform, test_size=0.2)
+
+    return X_train, X_test, y_train, y_test
