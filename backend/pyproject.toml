@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "5dinterpolator"
+version = "0.1.0"
+description = "5D interpolator using neural networks, part of the backend of a 5d interpolator web app"
+authors = [
+  { name = "Danilo de Souza"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy >=1.23",
+]
