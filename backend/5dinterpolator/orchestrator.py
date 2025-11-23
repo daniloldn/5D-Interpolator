@@ -1,6 +1,12 @@
+import os, uuid
+
 from data_handling import load_data, preprocessing_x, preprocessing_y
 from sklearn.model_selection import train_test_split
 
+
+processed_dir = "data/processed"
+
+os.makedirs(processed_dir, exist_ok=True)
 
 def process_data(file_path: str):
 
