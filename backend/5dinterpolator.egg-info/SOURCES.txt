@@ -1,0 +1,6 @@
+pyproject.toml
+5dinterpolator.egg-info/PKG-INFO
+5dinterpolator.egg-info/SOURCES.txt
+5dinterpolator.egg-info/dependency_links.txt
+5dinterpolator.egg-info/requires.txt
+5dinterpolator.egg-info/top_level.txt

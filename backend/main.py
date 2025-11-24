@@ -1,5 +1,8 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 import os, uuid
+
+
+
 
 
 app = FastAPI()
@@ -12,7 +15,7 @@ SUPPORTED_EXTS = { "pkl"}
 
 #uplaoding the data set
 @app.post("/upload/")
-async def uplaod(file: UploadFile = File(...)):
+async def uplaod(background_tasks: BackgroundTasks,file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="Empty filename.")
     ext = file.filename.split(".")[-1].lower()
@@ -27,5 +30,8 @@ async def uplaod(file: UploadFile = File(...)):
     contents = await file.read()
     with open(save_path, "wb") as f:
         f.write(contents)
+
+    # Trigger background processing
+    background_tasks.add_task(process_data, save_path)
     
     return {"message": "File uploaded successfully"}
