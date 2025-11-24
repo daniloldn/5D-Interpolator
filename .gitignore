@@ -1,1 +1,4 @@
 .github/
+__pycache__/
+*.pkl
+interpolator_5d.egg-info/

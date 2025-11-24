@@ -1,7 +1,7 @@
 import os, uuid
 import pickle
 
-from data_handling import validate_file, preprocessing_x
+from .data_handling import validate_file, preprocessing_x
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
@@ -27,7 +27,8 @@ def process_data(file_path: str):
             shape = validate_file(X)
             print(f"Valid file with {shape} featuers:")
 
-            X_transformed = preprocessing_x.fit_transform(X)
+            pipeline = preprocessing_x(X)
+            X_transformed = pipeline.fit_transform(X)
             scaler_y = StandardScaler()
             y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).flatten()
 
