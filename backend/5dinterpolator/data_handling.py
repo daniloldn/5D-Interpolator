@@ -24,7 +24,7 @@ def validate_file(data, expected_shape =5):
     
     #If its a dictionary
     if isinstance(data, dict):
-        shape = data["X"].shape
+        shape = data.shape
         if shape[1] != expected_shape:
             raise ValueError(f"Uploaded array has shape {shape[1]}, expected {expected_shape}")
         return shape[1]
@@ -35,7 +35,7 @@ def validate_file(data, expected_shape =5):
 
 
     
-def preprocessing_x(data: pd.DataFrame):
+def preprocessing_x(data: np.array):
 
     steps = [
         ('impute', SimpleImputer(strategy="mean", add_indicator=True)),
@@ -44,10 +44,4 @@ def preprocessing_x(data: pd.DataFrame):
 
     return Pipeline(steps)
 
-def preprocessing_y(data:pd.DataFrame):
 
-    steps = [
-        ('scaler', StandardScaler())
-    ]
-
-    return Pipeline(steps)
