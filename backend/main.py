@@ -5,13 +5,13 @@ import os, uuid
 app = FastAPI()
 
 
-upload_folder = "uploads"
+upload_folder = "data/uploads"
 os.makedirs(upload_folder, exist_ok=True)
 
 SUPPORTED_EXTS = { "pkl"}
 
 #uplaoding the data set
-@app.post("/data/upload")
+@app.post("/upload/")
 async def uplaod(file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="Empty filename.")
