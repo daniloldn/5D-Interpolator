@@ -1,7 +1,10 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
-import os, uuid, hashlib
+import os, hashlib
 from interpolator_5d.orchestrator import process_data
+from interpolator_5d.network import init_nn
 from datetime import datetime
+from pydantic import BaseModel
+import pickle
 
 
 
@@ -117,4 +120,48 @@ async def cleanup_files():
             "uploads": upload_count,
             "processed": processed_count
         }
+    }
+
+#training the network 
+
+class NNConfig(BaseModel):
+    file_id: str
+    hidden_layer_sizes: list[int] = [32]
+    activation: str = "relu"
+    opt_algo: str = "sgd"
+    max_iter: int = 200
+    random_state: int = 42
+    #add learning rate
+
+@app.post("/train/")
+async def train_nn(config: NNConfig):
+    processed_path = os.path.join(processed_folder, f"{config.file_id}_processed.pkl")
+    if not os.path.exists(processed_path):
+        raise HTTPException(status_code=404, detail="Processed file not found.")
+    
+    #open file
+    with open(processed_path, "rb") as f:
+        splits = pickle.load(f)
+    X_train = splits["X_train"]
+    y_train = splits["y_train"]
+
+    #initialize nn
+
+    mlp = init_nn(
+        tuple(config.hidden_layer_sizes), config.activation, 
+        config.opt_algo, config.max_iter, config.random_state
+        )
+    
+     # Train model
+    mlp.fit(X_train, y_train)
+
+    # Save model
+    model_path = processed_path.replace("_processed.pkl", "_mlp.pkl")
+    with open(model_path, "wb") as f:
+        pickle.dump(mlp, f)
+
+    return {
+        "message": f"Model trained and saved to {model_path}",
+        "file_id": config.file_id,
+        "final_loss": float(mlp.loss_)  
     }
