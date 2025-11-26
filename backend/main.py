@@ -2,8 +2,9 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, BackgroundTasks
 import os, hashlib
 from interpolator_5d.orchestrator import process_data
 from interpolator_5d.network import init_nn
-from datetime import datetime
+from datetime import datetime, timezone
 from pydantic import BaseModel
+from sklearn.metrics import mean_squared_error
 import pickle
 
 
@@ -27,14 +28,14 @@ async def root():
     return {
         "message": "5D Interpolator API",
         "status": "running",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "api_version": "1.0",
         "docs_url": "/docs"
     }
 
 #uplaoding the data set
 @app.post("/upload/")
-async def uplaod(background_tasks: BackgroundTasks,file: UploadFile = File(...)):
+async def upload(background_tasks: BackgroundTasks,file: UploadFile = File(...)):
     if not file.filename:
         raise HTTPException(status_code=400, detail="Empty filename.")
     ext = file.filename.split(".")[-1].lower()
@@ -165,3 +166,41 @@ async def train_nn(config: NNConfig):
         "file_id": config.file_id,
         "final_loss": float(mlp.loss_)  
     }
+
+# predict endpoint
+@app.post("/predict/")
+def predict(file_id: str):
+    model_path = os.path.join(processed_folder, f"{file_id}_mlp.pkl")
+    if not os.path.exists(model_path):
+        raise HTTPException(status_code=404, detail="model not found.")
+    
+    processed_path = os.path.join(processed_folder, f"{file_id}_processed.pkl")
+    if not os.path.exists(processed_path):
+        raise HTTPException(status_code=404, detail="Processed file not found.")
+    
+    #open file
+    with open(model_path, "rb") as f:
+        loaded_model = pickle.load(f)
+
+    with open(processed_path, "rb") as f:
+        data = pickle.load(f)
+
+    X_test = data["X_test"]
+    y_test = data["y_test"]
+
+    #predict
+
+    y_pred = loaded_model.predict(X_test)
+
+    mse = mean_squared_error(y_test, y_pred)
+
+    #save prediction
+    pred_path = processed_path.replace("_processed.pkl", "_prediction.pkl")
+    with open(pred_path, "wb") as f:
+        pickle.dump(y_pred, f)
+
+    return {
+        "message": f"Model predicted and saved to {pred_path}",
+        "file_id": file_id,
+        "final_loss": float(mse)  
+        }
