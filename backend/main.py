@@ -5,6 +5,7 @@ from interpolator_5d.network import init_nn
 from datetime import datetime, timezone
 from pydantic import BaseModel
 from sklearn.metrics import mean_squared_error
+from fastapi.middleware.cors import CORSMiddleware
 import pickle
 
 
@@ -12,6 +13,15 @@ import pickle
 
 
 app = FastAPI()
+
+#frontend connection
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3001"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 upload_folder = "data/uploads"
@@ -145,6 +155,10 @@ async def train_nn(config: NNConfig):
         splits = pickle.load(f)
     X_train = splits["X_train"]
     y_train = splits["y_train"]
+    X_test = splits["X_test"]
+    y_test = splits["y_test"]
+
+  
 
     #initialize nn
 
@@ -156,6 +170,12 @@ async def train_nn(config: NNConfig):
      # Train model
     mlp.fit(X_train, y_train)
 
+    #predict
+
+    y_pred = mlp.predict(X_test)
+
+    mse = mean_squared_error(y_test, y_pred)
+
     # Save model
     model_path = processed_path.replace("_processed.pkl", "_mlp.pkl")
     with open(model_path, "wb") as f:
@@ -164,43 +184,43 @@ async def train_nn(config: NNConfig):
     return {
         "message": f"Model trained and saved to {model_path}",
         "file_id": config.file_id,
-        "final_loss": float(mlp.loss_)  
+        "final_loss": float(mse)  
     }
+
+
+class NNpredict(BaseModel):
+    file_id: str
+    new_data: list[float] = [2.5, 6.9, 3.1, 4.1, 7.0]
+
 
 # predict endpoint
 @app.post("/predict/")
-def predict(file_id: str):
-    model_path = os.path.join(processed_folder, f"{file_id}_mlp.pkl")
+def predict(pred : NNpredict):
+    model_path = os.path.join(processed_folder, f"{pred.file_id}_mlp.pkl")
     if not os.path.exists(model_path):
         raise HTTPException(status_code=404, detail="model not found.")
     
-    processed_path = os.path.join(processed_folder, f"{file_id}_processed.pkl")
-    if not os.path.exists(processed_path):
-        raise HTTPException(status_code=404, detail="Processed file not found.")
     
     #open file
     with open(model_path, "rb") as f:
         loaded_model = pickle.load(f)
 
-    with open(processed_path, "rb") as f:
-        data = pickle.load(f)
 
-    X_test = data["X_test"]
-    y_test = data["y_test"]
+    #check new_data
+    if len(pred.new_data) != 5:
+        raise HTTPException(status_code=400, detail="Input must contain exactly 5 numbers.")
+    prediction_input = [pred.new_data]
 
     #predict
+    try:
+        y_pred = loaded_model.predict(prediction_input)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
-    y_pred = loaded_model.predict(X_test)
-
-    mse = mean_squared_error(y_test, y_pred)
-
-    #save prediction
-    pred_path = processed_path.replace("_processed.pkl", "_prediction.pkl")
-    with open(pred_path, "wb") as f:
-        pickle.dump(y_pred, f)
+    result_value = float(y_pred[0])
 
     return {
-        "message": f"Model predicted and saved to {pred_path}",
-        "file_id": file_id,
-        "final_loss": float(mse)  
+        "message": "interpolation Succesful",
+        "file_id": pred.file_id, 
+        "prediction": result_value
         }
