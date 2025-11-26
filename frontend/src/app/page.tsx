@@ -201,20 +201,20 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eeece2] py-8">
+    <div className="min-h-screen py-8" style={{ fontFamily: 'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif', backgroundColor: 'rgb(241, 243, 224)' }}>
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <header className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-[#3d3929] mb-4">
+          <h1 className="text-4xl font-bold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
             5D Interpolator
           </h1>
-          <p className="text-lg text-[#3d3929]/80 max-w-2xl mx-auto">
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'rgba(119, 136, 115, 0.8)' }}>
             Upload a 5-dimensional dataset, configure and train a neural network, 
             then generate predictions using the trained model.
           </p>
           
           {cleanupStatus && (
-            <div className="mt-4 text-sm text-[#3d3929] bg-[#eeece2] border border-[#da7756]/30 p-3 rounded max-w-md mx-auto">
+            <div className="mt-4 text-sm p-3 rounded max-w-md mx-auto" style={{ color: 'rgb(119, 136, 115)', backgroundColor: 'rgb(210, 220, 182)', border: '1px solid rgba(161, 188, 152, 0.5)' }}>
               {cleanupStatus}
             </div>
           )}
@@ -222,54 +222,61 @@ export default function Home() {
 
         <div className="grid gap-8 md:grid-cols-2">
           {/* Upload Section */}
-          <section className="bg-white rounded-lg shadow-lg p-6 border border-[#da7756]/20">
-            <h2 className="text-xl font-semibold text-[#3d3929] mb-4">
+          <section className="rounded-lg shadow-lg p-6" style={{ backgroundColor: 'white', border: '1px solid rgba(161, 188, 152, 0.3)' }}>
+            <h2 className="text-xl font-semibold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
               Dataset Upload
             </h2>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#3d3929] mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                   Select PKL File
                 </label>
                 <input
                   type="file"
                   accept=".pkl"
                   onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
-                  className="block w-full text-sm text-[#3d3929] file:mr-4 file:py-2 file:px-4 
+                  className="block w-full text-sm file:mr-4 file:py-2 file:px-4 
                            file:rounded file:border-0 file:text-sm file:font-medium 
-                           file:bg-[#da7756] file:text-white hover:file:bg-[#da7756]/90
-                           border border-[#da7756]/30 rounded"
+                           file:text-white border rounded"
+                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
                 />
               </div>
               
               <button
                 onClick={handleFileUpload}
                 disabled={!uploadedFile}
-                className="w-full bg-[#da7756] text-white py-2 px-4 rounded font-medium
-                         hover:bg-[#da7756]/90 disabled:bg-[#da7756]/50 disabled:cursor-not-allowed
-                         transition-colors"
+                className="w-full text-white py-2 px-4 rounded font-medium
+                         disabled:cursor-not-allowed transition-colors"
+                style={{ 
+                  backgroundColor: uploadedFile ? 'rgb(119, 136, 115)' : 'rgba(119, 136, 115, 0.5)'
+                }}
+                onMouseEnter={(e) => !uploadedFile || (e.target.style.backgroundColor = 'rgb(95, 110, 92)')}
+                onMouseLeave={(e) => !uploadedFile || (e.target.style.backgroundColor = 'rgb(119, 136, 115)')}
               >
                 Upload Dataset
               </button>
               
               {uploadStatus && (
-                <div className="text-sm text-[#3d3929] bg-[#eeece2] p-3 rounded">
+                <div className="text-sm p-3 rounded" style={{ color: 'rgb(119, 136, 115)', backgroundColor: 'rgb(210, 220, 182)' }}>
                   {uploadStatus}
                 </div>
               )}
               
               {/* Cleanup Section */}
-              <div className="pt-4 border-t border-[#da7756]/20">
+              <div className="pt-4" style={{ borderTop: '1px solid rgba(161, 188, 152, 0.3)' }}>
                 <button
                   onClick={handleCleanup}
-                  className="w-full bg-[#3d3929]/80 text-white py-2 px-4 rounded font-medium
-                           hover:bg-[#3d3929] transition-colors text-sm"
+                  className="w-full text-white py-2 px-4 rounded font-medium
+                           transition-colors text-sm"
+                  style={{ backgroundColor: 'rgba(119, 136, 115, 0.8)' }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(119, 136, 115)'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(119, 136, 115, 0.8)'}
                   title="Remove all uploaded and processed files"
                 >
                   🗑️ Cleanup All Files
                 </button>
-                <p className="text-xs text-[#3d3929]/60 mt-2 text-center">
+                <p className="text-xs mt-2 text-center" style={{ color: 'rgba(119, 136, 115, 0.6)' }}>
                   Removes all uploaded and processed files from server
                 </p>
               </div>
@@ -277,14 +284,14 @@ export default function Home() {
           </section>
 
           {/* Training Configuration */}
-          <section className="bg-white rounded-lg shadow-lg p-6 border border-[#da7756]/20">
-            <h2 className="text-xl font-semibold text-[#3d3929] mb-4">
+          <section className="rounded-lg shadow-lg p-6" style={{ backgroundColor: 'white', border: '1px solid rgba(161, 188, 152, 0.3)' }}>
+            <h2 className="text-xl font-semibold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
               Neural Network Configuration
             </h2>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-[#3d3929] mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                   Hidden Layer Sizes (comma-separated)
                 </label>
                 <input
@@ -292,8 +299,11 @@ export default function Home() {
                   value={hiddenLayers}
                   onChange={(e) => setHiddenLayers(e.target.value)}
                   placeholder="100,50"
-                  className="w-full border border-[#da7756]/30 rounded px-3 py-2 text-[#3d3929]
-                           focus:outline-none focus:border-[#da7756]"
+                  className="w-full border rounded px-3 py-2
+                           focus:outline-none"
+                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgb(161, 188, 152)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(161, 188, 152, 0.5)'}
                 />
               </div>
               
@@ -345,15 +355,19 @@ export default function Home() {
               <button
                 onClick={handleTrainModel}
                 disabled={!fileId || isTraining}
-                className="w-full bg-[#3d3929] text-white py-2 px-4 rounded font-medium
-                         hover:bg-[#3d3929]/90 disabled:bg-[#3d3929]/50 disabled:cursor-not-allowed
-                         transition-colors"
+                className="w-full text-white py-2 px-4 rounded font-medium
+                         disabled:cursor-not-allowed transition-colors"
+                style={{ 
+                  backgroundColor: (!fileId || isTraining) ? 'rgba(95, 110, 92, 0.5)' : 'rgb(95, 110, 92)'
+                }}
+                onMouseEnter={(e) => (fileId && !isTraining) && (e.target.style.backgroundColor = 'rgb(75, 88, 72)')}
+                onMouseLeave={(e) => (fileId && !isTraining) && (e.target.style.backgroundColor = 'rgb(95, 110, 92)')}
               >
                 {isTraining ? 'Training...' : 'Train Neural Network'}
               </button>
               
               {trainStatus && (
-                <div className="text-sm text-[#3d3929] bg-[#eeece2] p-3 rounded">
+                <div className="text-sm p-3 rounded" style={{ color: 'rgb(119, 136, 115)', backgroundColor: 'rgb(210, 220, 182)' }}>
                   {trainStatus}
                 </div>
               )}
@@ -362,14 +376,14 @@ export default function Home() {
         </div>
 
         {/* Prediction Section */}
-        <section className="mt-8 bg-white rounded-lg shadow-lg p-6 border border-[#da7756]/20">
-          <h2 className="text-xl font-semibold text-[#3d3929] mb-4">
+        <section className="mt-8 rounded-lg shadow-lg p-6" style={{ backgroundColor: 'white', border: '1px solid rgba(161, 188, 152, 0.3)' }}>
+          <h2 className="text-xl font-semibold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
             Make Predictions
           </h2>
           
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-[#3d3929] mb-2">
+              <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                 Input Values (5 comma-separated numbers)
               </label>
               <input
@@ -377,8 +391,11 @@ export default function Home() {
                 value={predictionInputs}
                 onChange={(e) => setPredictionInputs(e.target.value)}
                 placeholder="1.0,2.0,3.0,4.0,5.0"
-                className="w-full border border-[#da7756]/30 rounded px-3 py-2 text-[#3d3929]
-                         focus:outline-none focus:border-[#da7756]"
+                className="w-full border rounded px-3 py-2
+                         focus:outline-none"
+                style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                onFocus={(e) => e.target.style.borderColor = 'rgb(161, 188, 152)'}
+                onBlur={(e) => e.target.style.borderColor = 'rgba(161, 188, 152, 0.5)'}
               />
             </div>
             
@@ -386,9 +403,13 @@ export default function Home() {
               <button
                 onClick={handlePredict}
                 disabled={!finalLoss || isPredicting}
-                className="w-full bg-[#da7756] text-white py-2 px-4 rounded font-medium
-                         hover:bg-[#da7756]/90 disabled:bg-[#da7756]/50 disabled:cursor-not-allowed
-                         transition-colors"
+                className="w-full text-white py-2 px-4 rounded font-medium
+                         disabled:cursor-not-allowed transition-colors"
+                style={{ 
+                  backgroundColor: (!finalLoss || isPredicting) ? 'rgba(119, 136, 115, 0.5)' : 'rgb(119, 136, 115)'
+                }}
+                onMouseEnter={(e) => (finalLoss && !isPredicting) && (e.target.style.backgroundColor = 'rgb(95, 110, 92)')}
+                onMouseLeave={(e) => (finalLoss && !isPredicting) && (e.target.style.backgroundColor = 'rgb(119, 136, 115)')}
               >
                 {isPredicting ? 'Predicting...' : 'Generate Prediction'}
               </button>
@@ -396,15 +417,15 @@ export default function Home() {
           </div>
           
           {predictStatus && (
-            <div className="mt-4 text-sm text-[#3d3929] bg-[#eeece2] p-3 rounded">
+            <div className="mt-4 text-sm p-3 rounded" style={{ color: 'rgb(119, 136, 115)', backgroundColor: 'rgb(210, 220, 182)' }}>
               {predictStatus}
             </div>
           )}
           
           {predictionResult !== null && (
-            <div className="mt-4 p-4 bg-[#da7756]/10 border border-[#da7756]/30 rounded">
-              <h3 className="font-medium text-[#3d3929] mb-2">Prediction Result</h3>
-              <p className="text-2xl font-bold text-[#da7756]">
+            <div className="mt-4 p-4 rounded" style={{ backgroundColor: 'rgba(161, 188, 152, 0.2)', border: '1px solid rgba(161, 188, 152, 0.5)' }}>
+              <h3 className="font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>Prediction Result</h3>
+              <p className="text-2xl font-bold" style={{ color: 'rgb(161, 188, 152)' }}>
                 {predictionResult.toFixed(6)}
               </p>
             </div>
@@ -413,23 +434,23 @@ export default function Home() {
 
         {/* Model Summary */}
         {finalLoss !== null && (
-          <section className="mt-8 bg-white rounded-lg shadow-lg p-6 border border-[#da7756]/20">
-            <h2 className="text-xl font-semibold text-[#3d3929] mb-4">
+          <section className="mt-8 rounded-lg shadow-lg p-6" style={{ backgroundColor: 'white', border: '1px solid rgba(161, 188, 152, 0.3)' }}>
+            <h2 className="text-xl font-semibold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
               Model Summary
             </h2>
             
             <div className="grid gap-4 md:grid-cols-3">
-              <div className="text-center p-4 bg-[#eeece2] rounded">
-                <h3 className="font-medium text-[#3d3929] mb-1">Architecture</h3>
-                <p className="text-sm text-[#3d3929]/80">{hiddenLayers}</p>
+              <div className="text-center p-4 rounded" style={{ backgroundColor: 'rgb(210, 220, 182)' }}>
+                <h3 className="font-medium mb-1" style={{ color: 'rgb(119, 136, 115)' }}>Architecture</h3>
+                <p className="text-sm" style={{ color: 'rgba(119, 136, 115, 0.8)' }}>{hiddenLayers}</p>
               </div>
-              <div className="text-center p-4 bg-[#eeece2] rounded">
-                <h3 className="font-medium text-[#3d3929] mb-1">Activation</h3>
-                <p className="text-sm text-[#3d3929]/80">{activation.toUpperCase()}</p>
+              <div className="text-center p-4 rounded" style={{ backgroundColor: 'rgb(210, 220, 182)' }}>
+                <h3 className="font-medium mb-1" style={{ color: 'rgb(119, 136, 115)' }}>Activation</h3>
+                <p className="text-sm" style={{ color: 'rgba(119, 136, 115, 0.8)' }}>{activation.toUpperCase()}</p>
               </div>
-              <div className="text-center p-4 bg-[#eeece2] rounded">
-                <h3 className="font-medium text-[#3d3929] mb-1">Final Loss</h3>
-                <p className="text-sm text-[#3d3929]/80">{finalLoss.toFixed(6)}</p>
+              <div className="text-center p-4 rounded" style={{ backgroundColor: 'rgb(210, 220, 182)' }}>
+                <h3 className="font-medium mb-1" style={{ color: 'rgb(119, 136, 115)' }}>Final Loss</h3>
+                <p className="text-sm" style={{ color: 'rgba(119, 136, 115, 0.8)' }}>{finalLoss.toFixed(6)}</p>
               </div>
             </div>
           </section>
