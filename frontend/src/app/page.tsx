@@ -238,7 +238,7 @@ export default function Home() {
                   onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
                   className="block w-full text-sm file:mr-4 file:py-2 file:px-4 
                            file:rounded file:border-0 file:text-sm file:font-medium 
-                           file:text-white border rounded"
+                           file:text-white file:bg-green-600 hover:file:bg-green-700 border rounded"
                   style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
                 />
               </div>
@@ -270,8 +270,8 @@ export default function Home() {
                   className="w-full text-white py-2 px-4 rounded font-medium
                            transition-colors text-sm"
                   style={{ backgroundColor: 'rgba(119, 136, 115, 0.8)' }}
-                  onMouseEnter={(e) => e.target.style.backgroundColor = 'rgb(119, 136, 115)'}
-                  onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(119, 136, 115, 0.8)'}
+                  onMouseEnter={(e) => (e.target as HTMLButtonElement).style.backgroundColor = 'rgb(119, 136, 115)'}
+                  onMouseLeave={(e) => (e.target as HTMLButtonElement).style.backgroundColor = 'rgba(119, 136, 115, 0.8)'}
                   title="Remove all uploaded and processed files"
                 >
                   🗑️ Cleanup All Files
@@ -308,14 +308,17 @@ export default function Home() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#3d3929] mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                   Activation Function
                 </label>
                 <select
                   value={activation}
                   onChange={(e) => setActivation(e.target.value)}
-                  className="w-full border border-[#da7756]/30 rounded px-3 py-2 text-[#3d3929]
-                           focus:outline-none focus:border-[#da7756]"
+                  className="w-full border rounded px-3 py-2
+                           focus:outline-none"
+                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgb(161, 188, 152)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(161, 188, 152, 0.5)'}
                 >
                   <option value="relu">ReLU</option>
                   <option value="tanh">Tanh</option>
@@ -324,14 +327,17 @@ export default function Home() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#3d3929] mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                   Optimizer
                 </label>
                 <select
                   value={optimizer}
                   onChange={(e) => setOptimizer(e.target.value)}
-                  className="w-full border border-[#da7756]/30 rounded px-3 py-2 text-[#3d3929]
-                           focus:outline-none focus:border-[#da7756]"
+                  className="w-full border rounded px-3 py-2
+                           focus:outline-none"
+                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgb(161, 188, 152)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(161, 188, 152, 0.5)'}
                 >
                   <option value="adam">Adam</option>
                   <option value="sgd">SGD</option>
@@ -340,15 +346,18 @@ export default function Home() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-[#3d3929] mb-2">
+                <label className="block text-sm font-medium mb-2" style={{ color: 'rgb(119, 136, 115)' }}>
                   Max Iterations
                 </label>
                 <input
                   type="number"
                   value={maxIterations}
                   onChange={(e) => setMaxIterations(parseInt(e.target.value))}
-                  className="w-full border border-[#da7756]/30 rounded px-3 py-2 text-[#3d3929]
-                           focus:outline-none focus:border-[#da7756]"
+                  className="w-full border rounded px-3 py-2
+                           focus:outline-none"
+                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgb(161, 188, 152)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(161, 188, 152, 0.5)'}
                 />
               </div>
               
