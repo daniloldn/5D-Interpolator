@@ -209,6 +209,10 @@ def predict(pred : NNpredict):
     #check new_data
     if len(pred.new_data) != 5:
         raise HTTPException(status_code=400, detail="Input must contain exactly 5 numbers.")
+    
+    print(f"Prediction request for file_id: {pred.file_id}")
+    print(f"Input data: {pred.new_data}")
+    
     prediction_input = [pred.new_data]
 
     #predict

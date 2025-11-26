@@ -28,12 +28,21 @@ interface PredictResponse {
   file_id: string;
 }
 
+interface CleanupResponse {
+  message: string;
+  files_removed: {
+    uploads: number;
+    processed: number;
+  };
+}
+
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [fileId, setFileId] = useState<string>('');
   const [uploadStatus, setUploadStatus] = useState<string>('');
   const [trainStatus, setTrainStatus] = useState<string>('');
   const [predictStatus, setPredictStatus] = useState<string>('');
+  const [cleanupStatus, setCleanupStatus] = useState<string>('');
   const [isTraining, setIsTraining] = useState(false);
   const [isPredicting, setIsPredicting] = useState(false);
   
@@ -144,7 +153,7 @@ export default function Home() {
         },
         body: JSON.stringify({
           file_id: fileId,
-          inputs: inputs
+          new_data: inputs
         }),
       });
 
@@ -163,6 +172,34 @@ export default function Home() {
     }
   };
 
+  const handleCleanup = async () => {
+    try {
+      setCleanupStatus('Cleaning up files...');
+      
+      const response = await fetch('http://127.0.0.1:8000/cleanup', {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        const result: CleanupResponse = await response.json();
+        setCleanupStatus(`${result.message}. Removed ${result.files_removed.uploads} upload(s) and ${result.files_removed.processed} processed file(s).`);
+        
+        // Reset all states since files are cleared
+        setFileId('');
+        setUploadStatus('');
+        setTrainStatus('');
+        setPredictStatus('');
+        setPredictionResult(null);
+        setFinalLoss(null);
+        setUploadedFile(null);
+      } else {
+        setCleanupStatus('Cleanup failed.');
+      }
+    } catch (error) {
+      setCleanupStatus('Error during cleanup.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#eeece2] py-8">
       <div className="max-w-4xl mx-auto px-6">
@@ -175,6 +212,12 @@ export default function Home() {
             Upload a 5-dimensional dataset, configure and train a neural network, 
             then generate predictions using the trained model.
           </p>
+          
+          {cleanupStatus && (
+            <div className="mt-4 text-sm text-[#3d3929] bg-[#eeece2] border border-[#da7756]/30 p-3 rounded max-w-md mx-auto">
+              {cleanupStatus}
+            </div>
+          )}
         </header>
 
         <div className="grid gap-8 md:grid-cols-2">
@@ -215,6 +258,21 @@ export default function Home() {
                   {uploadStatus}
                 </div>
               )}
+              
+              {/* Cleanup Section */}
+              <div className="pt-4 border-t border-[#da7756]/20">
+                <button
+                  onClick={handleCleanup}
+                  className="w-full bg-[#3d3929]/80 text-white py-2 px-4 rounded font-medium
+                           hover:bg-[#3d3929] transition-colors text-sm"
+                  title="Remove all uploaded and processed files"
+                >
+                  🗑️ Cleanup All Files
+                </button>
+                <p className="text-xs text-[#3d3929]/60 mt-2 text-center">
+                  Removes all uploaded and processed files from server
+                </p>
+              </div>
             </div>
           </section>
 
