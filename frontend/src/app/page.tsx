@@ -201,8 +201,17 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen py-8" style={{ fontFamily: 'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif', backgroundColor: 'rgb(241, 243, 224)' }}>
-      <div className="max-w-4xl mx-auto px-6">
+    <>
+      <style>{`
+        input[type="file"]::file-selector-button {
+          background-color: rgb(119, 136, 115) !important;
+        }
+        input[type="file"]::file-selector-button:hover {
+          background-color: rgb(95, 110, 92) !important;
+        }
+      `}</style>
+      <div className="min-h-screen py-8" style={{ fontFamily: 'Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif', backgroundColor: 'rgb(241, 243, 224)' }}>
+        <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4" style={{ color: 'rgb(119, 136, 115)' }}>
@@ -236,10 +245,18 @@ export default function Home() {
                   type="file"
                   accept=".pkl"
                   onChange={(e) => setUploadedFile(e.target.files?.[0] || null)}
-                  className="block w-full text-sm file:mr-4 file:py-2 file:px-4 
-                           file:rounded file:border-0 file:text-sm file:font-medium 
-                           file:text-white file:bg-green-600 hover:file:bg-green-700 border rounded"
-                  style={{ color: 'rgb(119, 136, 115)', borderColor: 'rgba(161, 188, 152, 0.5)' }}
+                  className="block w-full text-sm border rounded
+                           [&::file-selector-button]:mr-4 [&::file-selector-button]:py-2 [&::file-selector-button]:px-4
+                           [&::file-selector-button]:rounded [&::file-selector-button]:border-0 
+                           [&::file-selector-button]:text-sm [&::file-selector-button]:font-medium
+                           [&::file-selector-button]:text-white [&::file-selector-button]:cursor-pointer
+                           [&::file-selector-button]:transition-colors"
+                  style={{ 
+                    color: 'rgb(119, 136, 115)', 
+                    borderColor: 'rgba(161, 188, 152, 0.5)',
+                    '--file-button-bg': 'rgb(119, 136, 115)',
+                    '--file-button-hover-bg': 'rgb(95, 110, 92)'
+                  } as React.CSSProperties & { '--file-button-bg': string; '--file-button-hover-bg': string }}
                 />
               </div>
               
@@ -466,5 +483,6 @@ export default function Home() {
         )}
       </div>
     </div>
+    </>
   );
 }
