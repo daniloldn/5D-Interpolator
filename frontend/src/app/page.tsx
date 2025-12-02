@@ -68,7 +68,7 @@ export default function Home() {
 
     try {
       setUploadStatus('Uploading...');
-      const response = await fetch('http://127.0.0.1:8000/upload/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/upload/`, {
         method: 'POST',
         body: formData,
       });
@@ -106,7 +106,7 @@ export default function Home() {
       setIsTraining(true);
       setTrainStatus('Training neural network...');
       
-      const response = await fetch('http://127.0.0.1:8000/train/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/train/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -146,7 +146,7 @@ export default function Home() {
       setIsPredicting(true);
       setPredictStatus('Making prediction...');
       
-      const response = await fetch('http://127.0.0.1:8000/predict/', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/predict/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ export default function Home() {
     try {
       setCleanupStatus('Cleaning up files...');
       
-      const response = await fetch('http://127.0.0.1:8000/cleanup', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/cleanup`, {
         method: 'DELETE',
       });
 
